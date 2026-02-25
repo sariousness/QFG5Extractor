@@ -7,6 +7,12 @@ QFG5Extractor is a suite of reverse-engineered C# extraction tools for parsing, 
 - **Model Tab:** Transpiles native QFG5 `.mdl` models dynamically into open `.hak` files, bridging the legacy mesh structure, and handles bidirectional BMP exports and injection directly into the mesh byte arrays. Contains memory guards to safely digest malformed/corrupted arrays.
 - **Msg & Pano Tabs:** Converts legacy message blocks and `.nod` panorama backgrounds into modern image formats dynamically.
 
+### v1.0.1
+- Added SPK repack support to rebuild `.spk` archives from extracted/modded folders.
+- Added a new **Repack SPK** action in the SPK tab UI.
+- Repack flow now rewrites SPK file blocks and directory offsets/sizes to keep archive structure consistent for in-game use.
+- Internal SPK parsing logic was consolidated for reuse between extraction and repack paths.
+
 ## Building and Running
 
 ### Prerequisites
