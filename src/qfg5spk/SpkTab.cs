@@ -12,6 +12,7 @@ namespace QFG5Extractor.qfg5spk
         private Button browseSpkButton;
         private Button browseOutputButton;
         private Button runButton;
+        private Button repackButton;
         private ListBox filesListBox;
         private Label statusLabel;
         private ProgressBar progressBar;
@@ -29,11 +30,12 @@ namespace QFG5Extractor.qfg5spk
             spkFileTextBox = new TextBox { Left = 120, Top = 18, Width = 480 };
             browseSpkButton = new Button { Text = "Browse...", Left = 610, Top = 16, Width = 90 };
 
-            Label outLabel = new Label { Text = "Output folder", Left = 10, Top = 60, Width = 100 };
+            Label outLabel = new Label { Text = "Output/Mod folder", Left = 10, Top = 60, Width = 110 };
             outputFolderTextBox = new TextBox { Left = 120, Top = 58, Width = 480 };
             browseOutputButton = new Button { Text = "Browse...", Left = 610, Top = 56, Width = 90 };
 
             runButton = new Button { Text = "Extract All", Left = 510, Top = 100, Width = 90, Height = 32 };
+            repackButton = new Button { Text = "Repack SPK", Left = 390, Top = 100, Width = 110, Height = 32 };
             Button batchExtractButton = new Button { Text = "Batch Folder", Left = 610, Top = 100, Width = 90, Height = 32 };
             viewLogButton = new Button { Text = "View Log", Left = 610, Top = 140, Width = 90, Height = 28, Visible = false };
             progressBar = new ProgressBar { Left = 10, Top = 140, Width = 580, Height = 28 };
@@ -56,6 +58,7 @@ namespace QFG5Extractor.qfg5spk
             };
 
             runButton.Click += RunButton_Click;
+            repackButton.Click += RepackButton_Click;
             batchExtractButton.Click += BatchExtractButton_Click;
             viewLogButton.Click += (s, e) => {
                 Logger.OpenLogFile();
@@ -67,6 +70,7 @@ namespace QFG5Extractor.qfg5spk
             Controls.Add(outLabel);
             Controls.Add(outputFolderTextBox);
             Controls.Add(browseOutputButton);
+            Controls.Add(repackButton);
             Controls.Add(runButton);
             Controls.Add(batchExtractButton);
             Controls.Add(viewLogButton);
@@ -175,6 +179,68 @@ namespace QFG5Extractor.qfg5spk
                 MessageBox.Show(statusLabel.Text, "Extract SPK", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } else if (failed > 0) {
                 MessageBox.Show("Error occurred during extraction. Check log.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            viewLogButton.Visible = true;
+        }
+
+        private void RepackButton_Click(object sender, EventArgs e)
+        {
+            string spkFilesText = spkFileTextBox.Text.Trim();
+            string modifiedFolder = outputFolderTextBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(spkFilesText))
+            {
+                MessageBox.Show("Please select one source SPK file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string[] spkFiles = spkFilesText.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            if (spkFiles.Length != 1)
+            {
+                MessageBox.Show("Repack requires exactly one source SPK file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string sourceSpk = spkFiles[0];
+            if (!File.Exists(sourceSpk))
+            {
+                MessageBox.Show("Source SPK file not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!Directory.Exists(modifiedFolder))
+            {
+                MessageBox.Show("Modified folder not found. Select the extracted/modded folder in Output folder first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string outputPath;
+            using (SaveFileDialog dialog = new SaveFileDialog())
+            {
+                string baseName = Path.GetFileNameWithoutExtension(sourceSpk);
+                string sourceDir = Path.GetDirectoryName(sourceSpk);
+                dialog.Filter = "SPK files (*.spk)|*.spk|All files (*.*)|*.*";
+                dialog.FileName = baseName + "_modded.spk";
+                dialog.InitialDirectory = sourceDir;
+
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+                outputPath = dialog.FileName;
+            }
+
+            try
+            {
+                statusLabel.Text = "Repacking: " + Path.GetFileName(sourceSpk);
+                Application.DoEvents();
+                SpkConverter.Repack(sourceSpk, modifiedFolder, outputPath);
+                statusLabel.Text = "Repack complete: " + Path.GetFileName(outputPath);
+                MessageBox.Show("Repack completed:\n" + outputPath, "Repack SPK", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(sourceSpk, ex.Message);
+                statusLabel.Text = "Repack failed. Check log.";
+                MessageBox.Show("Error during SPK repack. Check log for details.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             viewLogButton.Visible = true;
