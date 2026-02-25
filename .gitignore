@@ -1,0 +1,15 @@
+# C# / Mono Artifacts
+[Bb]in/
+[Oo]bj/
+
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+# Build Logs
+*.log
+
+# Temp Swap
+*.swp
+*~
