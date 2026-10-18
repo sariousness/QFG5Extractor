@@ -1,4 +1,4 @@
-# QFG5 reverse-engineering notes and code audit
+# QFG5 reverse-engineering notes
 
 These notes consolidate the archived QFG5 reverse-engineering posts listed in
 [Sources](#sources), then compare their claims with the current source tree. The
