@@ -1,33 +1,3 @@
-30/09/26 - Code Audit & Documentation
-
-Searched for "Application.DoEvents"
-Viewed qfg5extractor.log:1-12
-Listed directory UI%20Kit
-Viewed PanoTab.cs:1-60
-Viewed MsgTab.cs:1-60
-Viewed GraTab.cs:1-60
-Viewed GraTab.cs:130-180
-Viewed GraTab.cs:240-300
-Viewed FlagsTab.cs:1-60
-Viewed FlagsTab.cs:95-140
-Viewed FlagsTab.cs:141-200
-Viewed SettingsTab.cs:1-60
-Viewed SaveTab.cs:60-150
-Viewed SaveTab.cs:151-220
-Viewed SaveTab.cs:240-310
-Viewed SaveTab.cs:370-450
-Viewed SaveTab.cs:451-520
-Viewed ModelDatabase.cs:1-60
-Searched for "GL.DeleteTexture"
-Searched for "Dispose"
-Viewed TextureEditorTab.cs:300-360
-Viewed TextureEditorTab.cs:230-300
-Viewed TextureEditorTab.cs:370-430
-Searched for "Canvas_Paint"
-Viewed TextureEditorTab.cs:480-550
-Viewed QFG5ProgressBar.cs:1-56
-Viewed QFG5PathField.cs:1-54
-Viewed QFG5PreviewFrame.cs:1-29
 
 # QFG5Extractor Comprehensive Architecture, UI/UX, & Performance Audit
 
